@@ -1,0 +1,45 @@
+body {
+    background:#101010;
+    margin:0
+    }
+path {
+  fill: none;
+ /* stroke: #000;
+  stroke-width: 3px;*/
+}
+
+circle {
+  /*fill: #0892d0 ;*/
+  /*stroke: #0892d0 ;*/
+  stroke-width: 10px;
+}
+#container {
+   position: relative;
+}
+
+#background {
+   position: absolute;
+   top: 0;
+   left: 0;
+   bottom: 0;
+   right: 0;
+   z-index: -1;
+   overflow: hidden;
+}
+ .chart {
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+     background:#101010;
+  }
+.axis path, .axis line {
+    /*fill: none;*/
+    stroke: #FFFFFF;
+    shape-rendering: crispEdges;
+  }
+  text {
+    fill: white;
+    -webkit-text-fill-color: white;
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+    stroke: #FFFFFF;
+  }
