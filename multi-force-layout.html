@@ -11,8 +11,16 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
-var width = 960,
-    height = 500;
+
+var w = window,
+    d = document,
+    e = d.documentElement,
+    g = d.getElementsByTagName('body')[0],
+    width = w.innerWidth || e.clientWidth || g.clientWidth,
+    height = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+
+d3.csv('data/employees-list.csv', function(data) { process(data)});
 
 var fill = d3.scale.category10();
 
@@ -30,10 +38,11 @@ var force = d3.layout.force()
     .size([width, height])
     .on("tick", tick);
 
-var node = svg.selectAll("circle");
+var node = svg.selectAll("g");
 
 function tick(e) {
   var k = .1 * e.alpha;
+  //console.log(k);
 
   // Push nodes toward their designated focus.
   nodes.forEach(function(o, i) {
@@ -42,24 +51,49 @@ function tick(e) {
   });
 
   node
-      .attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; });
+         .attr('transform', function(d) {return "translate (" + d.x +"," + d.y + ")"});
+      // .attr("x", function(d) { return d.x; })
+      // .attr("y", function(d) { return d.y; });
 }
 
-setInterval(function(){
-  nodes.push({id: ~~(Math.random() * foci.length)});
-  force.start();
+function process (data) {
 
-  node = node.data(nodes);
+    setInterval(function(){
+      nodes.push({id: ~~(Math.random() * foci.length), data : data.pop()});
 
-  node.enter().append("circle")
-      .attr("class", "node")
-      .attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; })
-      .attr("r", 8)
-      .style("fill", function(d) { return fill(d.id); })
-      .style("stroke", function(d) { return d3.rgb(fill(d.id)).darker(2); })
-      .call(force.drag);
-}, 500);
+      force.start();
 
+      node = node.data(nodes);
+     // console.log(node);
+
+        nd = node.enter()
+            .append('g')
+            .attr("class", "node")
+             .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+            .call(force.drag);
+
+
+          nd.append('text')
+
+          // .attr("x", function(d) { return d.x; })
+          // .attr("y", function(d) { return d.y; })
+          .text( function (d) { return "( " + d.data.Name + ", " + d.data.Title +" )"; })
+             .attr("font-family", "sans-serif")
+             .attr("font-size", "20px")
+                 .attr("fill", "red");
+
+         // nd.append("svg:image")
+         //    .attr("xlink:href", function(d) { if (d.HasPicture) {return "img/" + d.id +".png"} else {return "img/li.png"}})
+         //    // .attr("x", function(d) { return d.x; })
+         //    // .attr("y", function(d) { return d.y; })
+         //    .attr("width", "20%")
+         //    .attr("height", "20%")
+         //  // .call(force.drag);
+
+
+           node.exit().remove();
+
+    }, 500);
+};
 </script>
+
